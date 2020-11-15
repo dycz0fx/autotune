@@ -1,0 +1,10 @@
+nodes=(2 4 8 16)
+ppns=(4 8)
+umods=("libnbc" "adapt")
+lmods=("sm")
+min_msg=4
+max_msg=16777216
+min_seg=4096
+max_seg=1048576
+iters=10
+timeout=200

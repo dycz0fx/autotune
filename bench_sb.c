@@ -75,58 +75,26 @@ int main(int argc, char *argv[])
     MPI_Request request = MPI_REQUEST_NULL;
 
     /* run benchmark */
-    int m;
-    double s, e, ibsb;
-
-    for (m = min_seg; m <= max_seg; m *= 2) {
-        ibsb = 0;
+    int m = min_msg < min_seg ? min_msg : min_seg;
+    double s, e, sb;
+    for (; m <= max_seg; m *= 2) {
+        sb = 0;
         for (i = 0; i < iters + SKIP; i++) {
             MPI_Barrier(MPI_COMM_WORLD);
 
-            /* ib */
-            if (low_rank == 0) {
-                MPI_Ibcast(buf, m, MPI_CHAR, 0, MPI_COMM_UP, &request);
-                MPI_Wait(&request, &status);
-            }
-
-            /* nibsb */
-            int j = 0;
-            int n;
-            if (m < 64 * 1024) {
-                n = 3;
-            }
-            else {
-                n = 1;
-            }
-            for(j=0; j<n; j++){
-                if (low_rank == 0) {
-                    MPI_Ibcast(buf, m, MPI_CHAR, 0, MPI_COMM_UP, &request);
-                }
-                MPI_Bcast(buf, m, MPI_CHAR, 0, MPI_COMM_LOW);
-                if (low_rank == 0) {
-                    MPI_Wait(&request, &status);
-                }
-            }
-
-            /* ibsb */
+            /* sb */
             s = MPI_Wtime();
-            if (low_rank == 0) {
-                MPI_Ibcast(buf, m, MPI_CHAR, 0, MPI_COMM_UP, &request);
-            }
             MPI_Bcast(buf, m, MPI_CHAR, 0, MPI_COMM_LOW);
-            if (low_rank == 0) {
-                MPI_Wait(&request, &status);
-            }
             e = MPI_Wtime();
             if (i >= SKIP) {
-                ibsb += e - s;
+                sb += e - s;
             }
         }
 
-        ibsb = (ibsb * 1e6) / iters;
+        sb = (sb * 1e6) / iters;
 
         if (low_rank == 0) {
-            printf("%d %d %f\n", up_rank, m, ibsb);
+            printf("%d %d %f\n", up_rank, m, sb);
         }
     }
 
