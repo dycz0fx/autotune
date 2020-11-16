@@ -1,5 +1,5 @@
-autotuner="/home/dycz0fx/program/autotune"
-config="$autotuner/config"
+autotune="/home/dycz0fx/program/autotune"
+config="$autotune/config"
 output="$HOME/.openmpi"
 result="${output}/autotune"
 
@@ -22,7 +22,7 @@ do
     for umod in "${umods[@]}"
     do
         echo "umod $umod"
-        eval "mpirun -np $np --map-by ppr:1:node --timeout $timeout --bind-to core --report-bindings --mca coll_${umod}_priority 40 $autotuner/bench_ib --min_msg $min_msg --min_seg $min_seg --max_seg $max_seg --iters $iters > $result/bench_ib.${n}_${umod}"
+        eval "mpirun -np $np --map-by ppr:1:node --timeout $timeout --bind-to core --report-bindings --mca coll_${umod}_priority 40 $autotune/bench_ib --min_msg $min_msg --min_seg $min_seg --max_seg $max_seg --iters $iters > $result/bench_ib.${n}_${umod}"
 
     done
 done
@@ -33,7 +33,7 @@ do
     for lmod in "${lmods[@]}"
     do
         echo "lmod $lmod"
-        eval "mpirun -np $np --map-by ppr:$c:node --timeout $timeout --bind-to core --report-bindings --mca coll_${lmod}_priority 40 $autotuner/bench_sb --min_msg $min_msg --min_seg $min_seg --max_seg $max_seg --iters $iters > $result/bench_sb.${c}_${lmod}"
+        eval "mpirun -np $np --map-by ppr:$c:node --timeout $timeout --bind-to core --report-bindings --mca coll_${lmod}_priority 40 $autotune/bench_sb --min_msg $min_msg --min_seg $min_seg --max_seg $max_seg --iters $iters > $result/bench_sb.${c}_${lmod}"
     done
 done
 
@@ -52,7 +52,7 @@ do
             do
                 echo "umod $umod"
                 echo "lmod $lmod"                
-                eval "mpirun -np $np --map-by ppr:$c:node --timeout $timeout --bind-to core --report-bindings --mca coll_${lmod}_priority 50 --mca coll_${umod}_priority 40 $autotuner/bench_ibsb --min_msg $min_msg --min_seg $min_seg --max_seg $max_seg --iters $iters > $result/bench_ibsb.${n}_${c}_${umod}_${lmod}"
+                eval "mpirun -np $np --map-by ppr:$c:node --timeout $timeout --bind-to core --report-bindings --mca coll_${lmod}_priority 50 --mca coll_${umod}_priority 40 $autotune/bench_ibsb --min_msg $min_msg --min_seg $min_seg --max_seg $max_seg --iters $iters > $result/bench_ibsb.${n}_${c}_${umod}_${lmod}"
             done
         done
     done

@@ -1,5 +1,5 @@
-autotuner="/home/dycz0fx/program/autotune"
-config="$autotuner/config"
+autotune="/home/dycz0fx/program/autotune"
+config="$autotune/config"
 output="$HOME/.openmpi"
 result="${output}/autotune"
 
@@ -39,7 +39,7 @@ do
                     echo "umod $umod"
                     echo "lmod $lmod"
                     echo "seg $seg"
-                    eval "mpirun -np $np --map-by ppr:$c:node --timeout $timeout --bind-to core --report-bindings --mca coll_han_priority 50 --mca coll_han_bcast_up_module $umod_id --mca coll_han_bcast_low_module $lmod_id --mca coll_han_bcast_segsize $seg $autotuner/bench_bcast --min_msg $min_msg --max_msg $max_msg --iters $iters > $result/bench_bcast.${n}_${c}_${umod}_${lmod}_${seg}"
+                    eval "mpirun -np $np --map-by ppr:$c:node --timeout $timeout --bind-to core --report-bindings --mca coll_han_priority 50 --mca coll_han_bcast_up_module $umod_id --mca coll_han_bcast_low_module $lmod_id --mca coll_han_bcast_segsize $seg $autotune/bench_bcast --min_msg $min_msg --max_msg $max_msg --iters $iters > $result/bench_bcast.${n}_${c}_${umod}_${lmod}_${seg}"
                 done
             done
         done
